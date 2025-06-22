@@ -586,7 +586,11 @@ static inline size_t js__malloc_usable_size(const void *ptr)
     return malloc_size(ptr);
 #elif defined(_WIN32)
     return _msize((void *)ptr);
-#elif defined(__linux__) || defined(__ANDROID__) || defined(__CYGWIN__) || defined(__FreeBSD__)
+#elif defined(__ANDROID__)
+    /* malloc_usable_size is not available in many Android NDK versions.
+     * Return 0 to indicate the size is unknown. */
+    return 0;
+#elif defined(__linux__) || defined(__CYGWIN__) || defined(__FreeBSD__)
     return malloc_usable_size((void *)ptr);
 #else
     return 0;

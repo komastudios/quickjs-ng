@@ -1438,6 +1438,10 @@ void js_cond_init(js_cond_t *cond) {
 #if defined(__APPLE__) && defined(__MACH__)
     if (pthread_cond_init(cond, NULL))
         abort();
+#elif defined(__ANDROID__) && __ANDROID_API__ < 21
+    /* pthread_condattr_setclock is not available on Android API < 21 */
+    if (pthread_cond_init(cond, NULL))
+        abort();
 #else
     pthread_condattr_t attr;
 
